@@ -1,7 +1,13 @@
 import string
-import torch, os, re, numpy
+import torch, os, re, numpy, datasets
 from pathlib import Path
 from nltk.tokenize import sent_tokenize
+
+import collections
+import numpy as np
+
+from transformers.data import default_data_collator
+from transformers import DataCollatorForLanguageModeling
 
 class AnBertDataset(object):
     """AnBertDataset - Gerador de Dataset
@@ -12,7 +18,7 @@ class AnBertDataset(object):
     A classe também produz um dataset com os textos para treinamento, avaliação e validação.
 
     """
-    def __init__(self, path = None, file = None):
+    def __init__(self, tokenizer, path = None, file = None):
         """ 
         Construtor da classe AnBertDataset
 
@@ -20,13 +26,14 @@ class AnBertDataset(object):
             path (str, optional): Diretório contendo os arquivos a serem treinados.
             file (str, optional): Arquivo para treinamento único.
         """
+        self.tokenizer = tokenizer
         self.path = path
         self.file = file
-        self.dataset = {"text": [], "label":[]}
+        self.dataset = None
 
     def load_dataset(self, train_size = 0.8 , test_size = 0.1, validate_size = 0.1):    
         # normalizando a distribuição dos textos.
-        total = train_size + test_size, validate_size
+        total = train_size + test_size + validate_size
         train_size = train_size / total
         test_size = test_size / total
         validate_size = validate_size / total
@@ -44,18 +51,19 @@ class AnBertDataset(object):
         
         sentences = []
         # Separando os textos em sentenças
-        _ = [sentences.append(sent_tokenize(t)) for t in textos]
+        for t in textos:
+            sentences += sent_tokenize(t)
         
         train, evaluate, validate = AnBertDataset.__split_dataset(sentences, train_size, test_size, validate_size)
         
         self.__populate_dataset(train, evaluate, validate)
     
     def __load_path(self):
-        files = [str(x) for x in Path(self.args.valid_path).glob("**/*.txt")]
+        files = [str(x) for x in Path(self.path).glob("**/*.txt")]
         sentences = []
         
         for file in files:
-            sentences.append(file = self.__load_file(file))
+            sentences += self.__load_file(file = file)
         return sentences
         
     def __load_file(self, file = None):  
@@ -64,24 +72,28 @@ class AnBertDataset(object):
         
         # Lendo todas as linhas do documento em que a linha não seja vazia.
         with open(file, encoding="utf-8") as f:
-            sentences = [line for line in f.read().splitlines() if (len(line) > 0 and not line.isspace())]
+            sentences += [line for line in f.read().splitlines() if (len(line) > 0 and not line.isspace())]
         
         # Removendo os textos que contém apenas o número romano ou início de capítulo.
-        sentences = [s for s in sentences if not (self.__validation_roman_numbers(s) or s.lower().startswith('capítulo'))]
+        sentences = [str(s) for s in sentences if not (AnBertDataset.validation_roman_numbers(s) or s.lower().startswith('capítulo '))]
         return sentences
         
-    def __validation_roman_numbers(self, string):
+    def validation_roman_numbers(string):
         # Searching the input string in expression and
         # returning the boolean value
-        return bool(re.search(r"^M{0,3}(C[M|D]|D?C{0,3})(X[C|L]|L?X{0,3})(I[X|V]|V?I{0,3})$",string))
+        return bool(re.search(r"^M{0,3}(C[M|D]|D?C{0,3})(X[C|L]|L?X{0,3})(I[X|V]|V?I{0,3})$",string.strip().upper()))
     
     def __populate_dataset(self, train, test, validate):
-        output = [[t, "train"] for t in train] + [[t, "test"] for t in test] + [[t, "validate"] for t in validate] 
-        numpy.random.shuffle(output)
+        ds_train = datasets.Dataset.from_dict(mapping = {"text": train})
+        ds_test = datasets.Dataset.from_dict(mapping = {"text": test})
+        ds_validate = datasets.Dataset.from_dict(mapping = {"text": validate})
         
-        _ = [[self.dataset["text"].append(o[0]), self.dataset["label"].append(o[1])] for o in output]   
-
-    
+        self.dataset = datasets.DatasetDict({"train": ds_train, "test": ds_test, "validate": ds_validate})
+        
+        self.dataset = self.dataset.map(
+            self.__tokenize_function, batched=True, remove_columns=["text"]
+        )
+        
     def __split_dataset(dataset, train_size, eval_size, validate_size):
         size = len(dataset)
         
@@ -90,3 +102,26 @@ class AnBertDataset(object):
         x_validate = dataset[int(size * (train_size + eval_size)):int(size * (train_size + eval_size + validate_size))]
         
         return x_train, x_eval, x_validate
+    
+    def __group_texts(self, examples):
+        # Concatenate all texts
+        concatenated_examples = {k: sum(examples[k], []) for k in examples.keys()}
+        # Compute length of concatenated texts
+        total_length = len(concatenated_examples[list(examples.keys())[0]])
+        # We drop the last chunk if it's smaller than chunk_size
+        total_length = (total_length // self.__block_size) * self.__block_size
+        # Split by chunks of max_len
+        result = {
+            k: [t[i : i + self.__block_size] for i in range(0, total_length, self.__block_size)]
+            for k, t in concatenated_examples.items()
+        }
+        # Create a new labels column
+        result["labels"] = result["input_ids"].copy()
+        return result
+    
+    def __tokenize_function(self, examples):
+        result = self.tokenizer(examples["text"])
+        
+        if self.tokenizer.is_fast:
+            result["word_ids"] = [result.word_ids(i) for i in range(len(result["input_ids"]))]
+        return result
