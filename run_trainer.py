@@ -8,7 +8,7 @@ from transformers import AutoModelForMaskedLM, Trainer, AutoTokenizer, DataColla
 import tensorflow as tf
 from pathlib import Path
 
-import nltk, datasets, math
+import nltk, datasets, math, torch
 
 if __name__ == '__main__':
     
