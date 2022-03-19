@@ -34,6 +34,10 @@ if __name__ == '__main__':
     
     model_checkpoint = "distilbert-base-uncased"
     model = AutoModelForMaskedLM.from_pretrained(model_checkpoint)
+    
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    model  = model.to(device)
+  
     tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
     
     ads = AnBertDataset(tokenizer, path = './machado/traducao')
