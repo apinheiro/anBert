@@ -70,9 +70,14 @@ class AnBertDataset(object):
         file = file if file is not None else self.file
         sentences = []
         
+        
+        
         # Lendo todas as linhas do documento em que a linha não seja vazia.
         with open(file, encoding="utf-8") as f:
-            sentences += [line for line in f.read().splitlines() if (len(line) > 0 and not line.isspace())]
+            text = f.read()
+            text = text.replace("\n\n","#.#").replace("\n"," ").replace("#.#","\n")
+            
+            sentences += [line for line in text.splitlines() if (len(line) > 0 and not line.isspace())]
         
         # Removendo os textos que contém apenas o número romano ou início de capítulo.
         sentences = [str(s) for s in sentences if not (AnBertDataset.validation_roman_numbers(s) or s.lower().startswith('capítulo '))]
@@ -103,16 +108,20 @@ class AnBertDataset(object):
         
         return x_train, x_eval, x_validate
     
+    def getLabelMaskedDataset(self, block_size = 32):
+        self.block_size = block_size
+        return self.dataset.map(self.__group_texts, batched=True)
+    
     def __group_texts(self, examples):
         # Concatenate all texts
         concatenated_examples = {k: sum(examples[k], []) for k in examples.keys()}
         # Compute length of concatenated texts
         total_length = len(concatenated_examples[list(examples.keys())[0]])
         # We drop the last chunk if it's smaller than chunk_size
-        total_length = (total_length // self.__block_size) * self.__block_size
+        total_length = (total_length // self.block_size) * self.block_size
         # Split by chunks of max_len
         result = {
-            k: [t[i : i + self.__block_size] for i in range(0, total_length, self.__block_size)]
+            k: [t[i : i + self.block_size] for i in range(0, total_length, self.block_size)]
             for k, t in concatenated_examples.items()
         }
         # Create a new labels column

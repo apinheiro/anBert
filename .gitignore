@@ -114,3 +114,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.vscode
+distilbert-base-uncased-finetuned-imdb/
