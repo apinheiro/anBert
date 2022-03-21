@@ -18,7 +18,7 @@ class AnBertDataset(object):
     A classe também produz um dataset com os textos para treinamento, avaliação e validação.
 
     """
-    def __init__(self, tokenizer, path = None, file = None):
+    def __init__(self, tokenizer, path = None, file = None, block_size = 32):
         """ 
         Construtor da classe AnBertDataset
 
@@ -29,6 +29,7 @@ class AnBertDataset(object):
         self.tokenizer = tokenizer
         self.path = path
         self.file = file
+        self.block_size = block_size
         self.dataset = None
 
     def load_dataset(self, train_size = 0.8 , test_size = 0.1, validate_size = 0.1):    
@@ -70,8 +71,6 @@ class AnBertDataset(object):
         file = file if file is not None else self.file
         sentences = []
         
-        
-        
         # Lendo todas as linhas do documento em que a linha não seja vazia.
         with open(file, encoding="utf-8") as f:
             text = f.read()
@@ -108,9 +107,11 @@ class AnBertDataset(object):
         
         return x_train, x_eval, x_validate
     
-    def getLabelMaskedDataset(self, block_size = 32):
-        self.block_size = block_size
+    def getLabelMaskedDataset(self):
         return self.dataset.map(self.__group_texts, batched=True)
+    
+    def getNextSentenceDataset(self, block_size = 32):
+        return True
     
     def __group_texts(self, examples):
         # Concatenate all texts
