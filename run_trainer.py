@@ -4,7 +4,7 @@ Este arquivo diz respeito ao processo de treinamento de um modelo BERT.
 """
 
 from dataset import AnBertDataset
-from transformers import AutoModelForMaskedLM, Trainer, AutoTokenizer, DataCollatorForLanguageModeling, TrainingArguments
+from transformers import AutoModelForMaskedLM, Trainer, BertTokenizer, DataCollatorForLanguageModeling, TrainingArguments
 import tensorflow as tf
 import numpy as np
 from pathlib import Path
@@ -143,7 +143,7 @@ if __name__ == '__main__':
     model  = model.to(device)
   
     log.info("Baixnado tokenizer.")
-    tokenizer = AutoTokenizer.from_pretrained(args.bert_model)
+    tokenizer = BertTokenizer.from_pretrained(args.bert_model)
     
     log.info("Carregando o dataset a partir do diretório {0}.".format(args.train_dataset))
     ads = AnBertDataset(tokenizer, path = args.train_dataset, block_size= args.block_size)
