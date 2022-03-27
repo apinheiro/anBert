@@ -2,6 +2,7 @@ import string
 import torch, os, re, numpy, datasets
 from pathlib import Path
 from nltk.tokenize import sent_tokenize
+import tensorflow as tf
 
 import collections
 import numpy as np
@@ -31,6 +32,12 @@ class AnBertDataset(object):
         self.file = file
         self.block_size = block_size
         self.dataset = None
+    
+    def save_file(self):
+        self.dataset.save_to_disk("machado.ds")
+        
+    def load_file(self):
+        self.dataset = datasets.DatasetDict.load_from_disk('machado.ds')
 
     def load_dataset(self, train_size = 0.8 , test_size = 0.1, validate_size = 0.1):    
         # normalizando a distribuição dos textos.

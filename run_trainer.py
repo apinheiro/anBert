@@ -36,9 +36,9 @@ def getParametros():
                         help="Número de camadas de atenção.")
     parser.add_argument("--hidden_layer", default=6,type=int,
                         help="Número de camadas hidden")
-    parser.add_argument("--batch_size", default=32, type=int,
+    parser.add_argument("--batch_size", type=int,
                         help="Tamanho do batch de treinamento.")
-    parser.add_argument("--block_size", default=128, type=int,
+    parser.add_argument("--block_size", type=int,
                         help="Tamanho do bloco de texto para tratamento.")
     # General
     parser.add_argument("--no_cuda",

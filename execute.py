@@ -1,12 +1,15 @@
 import subprocess
 import psutil, logging, time
 from datetime import datetime
+import torch
+
+from dataset import AnBertDataset
 
 modelo = "neuralmind/bert-base-portuguese-cased"
 
 commands = ["python3", "run_trainer.py",
             "--bert_model={0}".format(modelo),
-            "--train_dataset=./machado/traducao",
+            "--train_dataset=./machado",
             "--do_train"]
 
 FORMAT = '%(message)s'
@@ -17,6 +20,20 @@ logging.basicConfig(filename=file,
                         level=logging.INFO)
 
 monitor = logging.getLogger('monitor')
+
+# Verificando o tipo de ambiente de treinamento.
+if torch.cuda.is_available():      
+    device = torch.device("cuda")
+    monitor.info('There are %d GPU(s) available.' % torch.cuda.device_count())
+    monitor.info('We will use the GPU:', torch.cuda.get_device_name(0))
+    
+    gpu = subprocess.run(["nvidia-smi"], stdout=subprocess.PIPE)
+    monitor.log(gpu.communicate()[0].decode('utf-8'))
+
+else:
+    monitor.info('No GPU available, using the CPU instead.')
+    device = torch.device("cpu")
+
 
 for batch in [4,8,16,32,64,128,256]:
     for block in [16,32,64,128,256]:

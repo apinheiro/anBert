@@ -117,3 +117,4 @@ dmypy.json
 
 .vscode
 distilbert-base-uncased-finetuned-imdb/
+machado.ds/
