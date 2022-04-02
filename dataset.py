@@ -49,10 +49,10 @@ class AnBertDataset(object):
         # Verificando se os arquivos estão corretos.
         path = False if self.path is None else True
         if not path:
-            assert self.file != None , "Indique um diretório ou arquivo para treinamento."
+            assert self.file == None , "Indique um diretório ou arquivo para treinamento."
             assert os.path.isfile(self.file) , "Arquivo não encontrado."
-        else:
-            assert os.path.isdir(self.path) , "Diretório não localizado."
+        
+        assert os.path.isdir(self.path) , "Diretório não localizado."
             
         # Lendo o conteúdo do texto informado ou dos textos de um diretório.
         textos = self.__load_path() if path else self.__load_file()
