@@ -124,7 +124,7 @@ def validate(ds, model, batch_size):
         logits = result.logits.detach().cpu().numpy()
         loss += result.loss
 
-        labels = b_labels.numpy().flatten()
+        labels = b_labels.to('cpu').numpy().flatten()
         preds = np.argmax(logits, axis=-1).flatten()
         pr, rc, f1, _ = precision_recall_fscore_support(labels, preds, average='weighted',zero_division=0)
         acc = accuracy_score(labels, preds)
