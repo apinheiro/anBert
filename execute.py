@@ -9,7 +9,7 @@ modelo = "neuralmind/bert-base-portuguese-cased"
 
 commands = ["python3", "run_trainer.py",
             "--bert_model={0}".format(modelo),
-            "--train_dataset=./machado",
+            "--train_dataset=./machado.ds",
             "--do_train"]
 
 FORMAT = '%(message)s'

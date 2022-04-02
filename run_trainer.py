@@ -54,8 +54,9 @@ def getParametros():
     # Training related
     parser.add_argument("--do_train", action='store_true',
                         help="Whether to run training.")
-    parser.add_argument("--train_dataset", default=None,
-                        type=str, help="JSON for training.")
+    parser.add_argument("--train_path", default=None,
+                        type=str, help="Path with train files.")
+    parser.add_argument("--train_dataset",type=str, help="Path with pre-trained dataset.")
     parser.add_argument("--per_gpu_train_batch_size", default=8, type=int,
                         help="Batch size per GPU/CPU for training.")
     parser.add_argument("--learning_rate", default=5e-5,
@@ -145,9 +146,15 @@ if __name__ == '__main__':
     log.info("Baixnado tokenizer.")
     tokenizer = BertTokenizer.from_pretrained(args.bert_model)
     
-    log.info("Carregando o dataset a partir do diretório {0}.".format(args.train_dataset))
-    ads = AnBertDataset(tokenizer, path = args.train_dataset, block_size= args.block_size)
-    ads.load_dataset()
+    
+    if args.train_dataset is None: 
+        log.info("Carregando o dataset a partir do diretório {0}.".format(args.train_path))
+        ads = AnBertDataset(tokenizer, path = args.train_path, block_size= args.block_size)
+        ads.load_dataset()
+    else:
+        ads = AnBertDataset(tokenizer, block_size=args.block_size)
+        ads.load_file(args.train_dataset)
+        
     
     log.info("Gerando o dataset para modelos do tipo Label Masked.")
     tokenized_samples = ads.getLabelMaskedDataset()
