@@ -12,7 +12,7 @@ from argparse import Namespace, ArgumentParser
 
 from torch.utils.data import TensorDataset, DataLoader, SequentialSampler
 
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score, precision_recall_fscore_support
 import nltk, datasets, math, torch, logging, time
 
 def getParametros():
@@ -57,6 +57,7 @@ def getParametros():
     parser.add_argument("--train_path", default=None,
                         type=str, help="Path with train files.")
     parser.add_argument("--train_dataset",type=str, help="Path with pre-trained dataset.")
+    parser.add_argument("--train_file", type=str, help="File to single training.")
     parser.add_argument("--per_gpu_train_batch_size", default=8, type=int,
                         help="Batch size per GPU/CPU for training.")
     parser.add_argument("--learning_rate", default=5e-5,
@@ -86,44 +87,29 @@ def getParametros():
 
     return parser.parse_args()
 
-def validate(ds, model, batch_size):
-    accuracy = 0.0
-    f1score = 0.0
+def validate(eval):
     
-    tds = TensorDataset(torch.tensor(ds["input_ids"]), 
-                        torch.tensor(ds["attention_mask"]), 
-                        torch.tensor(ds["labels"]))
+    results = ["Tempo total de validação: {:.3f}s .",
+               "Acurácia: {:.3f}.", "F1 Score: {:.3f}.",
+               "Recall: {:.3f}.", "Precisão: {:.3f}.",
+               "************", "Amostras por segundo: {:.3f}.",
+               "Passos por segundo: {:.3f}."]
     
-    validation_dl = DataLoader(
-            tds, # The validation samples.
-            sampler = SequentialSampler(tds), # Pull out batches sequentially.
-            batch_size = batch_size # Evaluate with this batch size.
-        )
-    
-    for batch in validation_dl:
-        
-        b_labels = batch[2].to(device)
-        b_input_ids = batch[0].to(device)
-        b_input_mask = batch[1].to(device)
-        
-        
-        with torch.no_grad():
-            result = model(b_input_ids, 
-                        token_type_ids=None, 
-                        attention_mask=b_input_mask,
-                        labels=b_labels,
-                        return_dict=True)
+    log.info("\n".join(results).format(eval["eval_runtime"],eval["eval_accuracy"],eval["eval_f1"],
+                                       eval["eval_recall"],eval["eval_precision"],eval["eval_samples_per_second"],
+                                       eval["eval_steps_per_second"]))
 
-        
-        logits = result.logits.detach().cpu().numpy()
-
-        label_ids = b_labels.to('cpu').numpy()
-    
-        predictions = np.argmax(logits, axis=-1).flatten()
-        accuracy += accuracy_score(label_ids.flatten(),predictions)
-        f1score += f1_score(label_ids.flatten(), predictions, average='macro')
-              
-    return accuracy / len(validation_dl), f1score / len(validation_dl)
+def compute_metrics(pred):
+    labels = pred.label_ids.flatten()
+    preds = pred.predictions.argmax(-1).flatten()
+    precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='weighted')
+    acc = accuracy_score(labels, preds)
+    return {
+        'accuracy': acc,
+        'f1': f1,
+        'precision': precision,
+        'recall': recall
+    }
     
 if __name__ == '__main__':
     
@@ -146,60 +132,60 @@ if __name__ == '__main__':
     log.info("Baixnado tokenizer.")
     tokenizer = BertTokenizer.from_pretrained(args.bert_model)
     
-    
     if args.train_dataset is None: 
         log.info("Carregando o dataset a partir do diretório {0}.".format(args.train_path))
-        ads = AnBertDataset(tokenizer, path = args.train_path, block_size= args.block_size)
+        ads = AnBertDataset(tokenizer, path = args.train_path, block_size= args.block_size, file=args.train_file)
         ads.load_dataset()
     else:
         ads = AnBertDataset(tokenizer, block_size=args.block_size)
         ads.load_file(args.train_dataset)
-        
-    
+
     log.info("Gerando o dataset para modelos do tipo Label Masked.")
     tokenized_samples = ads.getLabelMaskedDataset()
     
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm_probability=0.15)
 
-    
     # Show the training loss with every epoch
     logging_steps = len(tokenized_samples["train"]) // args.batch_size
     model_name = args.bert_model.split("/")[-1]
     
+    training_args = TrainingArguments(
+        output_dir=f"{model_name}-finetuned-an",
+        overwrite_output_dir=True,
+        evaluation_strategy="epoch",
+        learning_rate=args.learning_rate,
+        weight_decay=0.01,
+        per_device_train_batch_size=args.batch_size,
+        per_device_eval_batch_size=args.batch_size,
+        fp16=args.fp16,
+        logging_steps=logging_steps,
+    )
+    
     if args.do_train:
         log.info("Preparando o treinamento.")
-        training_args = TrainingArguments(
-            output_dir=f"{model_name}-finetuned-an",
-            overwrite_output_dir=True,
-            evaluation_strategy="epoch",
-            learning_rate=args.learning_rate,
-            weight_decay=0.01,
-            per_device_train_batch_size=args.batch_size,
-            per_device_eval_batch_size=args.batch_size,
-            fp16=args.fp16,
-            logging_steps=logging_steps,
-        )
-        
         trainer = Trainer(
             model=model,
             args=training_args,
             train_dataset=tokenized_samples["train"],
             eval_dataset=tokenized_samples["test"],
-            data_collator=data_collator,
+            data_collator=data_collator,compute_metrics=compute_metrics
         )
         log.info("Inicializando o treinamento.")
         trainer.train()
         log.info("Finalizando o treinamento.")
     
-        eval_results = trainer.evaluate()
-        print(f">>> Loss: {math.exp(eval_results['eval_loss']):.2f}")
+        validate(trainer.evaluate())
     
-    t0 = time.time()
-    log.info("iniciando a validação.")
-    acc, f1 = validate(tokenized_samples['validate'], model, args.batch_size)
-    log.info("Finalizando a validação.")
-    t1 = time.time()
-    
-    log.info("Tempo total de validação: {0:.3f}s .".format(t1-t0))
-    print("Acurácia: ", acc)
-    print("F1 Score: ", f1)
+    if args.do_eval:
+        log.info("iniciando a validação.")
+        t0 = time.time()
+        evaler = Trainer(
+            model=model,
+            args=training_args,
+            eval_dataset=tokenized_samples['validate'],
+            data_collator=data_collator,compute_metrics=compute_metrics
+        )
+        validate(evaler.evaluate())
+
+        
+        
