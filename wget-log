@@ -1,0 +1,11 @@
+--2022-04-05 23:28:44--  https://developer.nvidia.com/cuda-10.1-download-archive-update2?target_os=Linux
+Resolving developer.nvidia.com (developer.nvidia.com)... 152.195.19.142
+Connecting to developer.nvidia.com (developer.nvidia.com)|152.195.19.142|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 150886 (147K) [text/html]
+Saving to: ‘cuda-10.1-download-archive-update2?target_os=Linux’
+
+               cuda-10.1-down   0%[                                                  ]       0  --.-KB/s               cuda-10.1-download-archive-up 100%[=================================================>] 147.35K  --.-KB/s    in 0.06s   
+
+2022-04-05 23:28:45 (2.26 MB/s) - ‘cuda-10.1-download-archive-update2?target_os=Linux’ saved [150886/150886]
+

@@ -27,16 +27,16 @@ if torch.cuda.is_available():
     monitor.info('There are %d GPU(s) available.' % torch.cuda.device_count())
     monitor.info('We will use the GPU:', torch.cuda.get_device_name(0))
     
-    gpu = subprocess.run(["nvidia-smi"], stdout=subprocess.PIPE)
-    monitor.log(gpu.communicate()[0].decode('utf-8'))
+    #gpu = subprocess.run(["nvidia-smi"], stdout=subprocess.PIPE)
+    #monitor.log(gpu.communicate()[0].decode('utf-8'))
 
 else:
     monitor.info('No GPU available, using the CPU instead.')
     device = torch.device("cpu")
 
 
-for batch in [4,8,16,32,64,128,256]:
-    for block in [16,32,64,128,256]:
+for batch in [256,128,64,32,16]:
+    for block in [256,128,64,32,16]:
         
         este_comando = commands + ["--block_size={0}".format(block), "--batch_size={0}".format(batch)]
         
@@ -51,7 +51,7 @@ for batch in [4,8,16,32,64,128,256]:
         monitor.info("Sentenças por Bloco de treinamento: {0}.".format(batch))
         monitor.info("Modelo pré-treinado: {0}.\n".format(modelo))
         
-        with subprocess.Popen(commands, stdout=subprocess.PIPE, stderr=None) as running:
+        with subprocess.Popen(este_comando, stdout=subprocess.PIPE, stderr=None) as running:
             monitor.info(running.communicate()[0].decode('utf-8'))
         
         print("Treinamento finalizado.\n*************")
