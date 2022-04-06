@@ -1,0 +1,168 @@
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+hello world!
+
+total 72
+drwxr-xr-x   3 admin  staff    96 26 Mar 09:52 __pycache__
+-rw-r--r--   1 admin  staff  5630 26 Mar 09:52 dataset.py
+-rw-r--r--   1 admin  staff  1267 26 Mar 10:09 execute.py
+drwxr-xr-x@ 11 admin  staff   352 16 Fev 16:59 machado
+-rw-r--r--   1 admin  staff  2019 19 Mar 08:43 monitor.py
+-rw-r--r--   1 admin  staff   714 26 Mar 10:08 monitor_2022_03_26.log
+-rw-r--r--   1 admin  staff    33  7 Mar 16:57 requirements.txt
+-rw-r--r--   1 admin  staff  8266 26 Mar 09:26 run_trainer.py
+
+total 72
+drwxr-xr-x   3 admin  staff    96 26 Mar 09:52 __pycache__
+-rw-r--r--   1 admin  staff  5630 26 Mar 09:52 dataset.py
+-rw-r--r--   1 admin  staff  1267 26 Mar 10:09 execute.py
+drwxr-xr-x@ 11 admin  staff   352 16 Fev 16:59 machado
+-rw-r--r--   1 admin  staff  2019 19 Mar 08:43 monitor.py
+-rw-r--r--   1 admin  staff  1208 26 Mar 10:09 monitor_2022_03_26.log
+-rw-r--r--   1 admin  staff    33  7 Mar 16:57 requirements.txt
+-rw-r--r--   1 admin  staff  8266 26 Mar 09:26 run_trainer.py
+
+total 72
+drwxr-xr-x   3 admin  staff    96 26 Mar 09:52 __pycache__
+-rw-r--r--   1 admin  staff  5630 26 Mar 09:52 dataset.py
+-rw-r--r--   1 admin  staff  1267 26 Mar 10:09 execute.py
+drwxr-xr-x@ 11 admin  staff   352 16 Fev 16:59 machado
+-rw-r--r--   1 admin  staff  2019 19 Mar 08:43 monitor.py
+-rw-r--r--   1 admin  staff  1702 26 Mar 10:09 monitor_2022_03_26.log
+-rw-r--r--   1 admin  staff    33  7 Mar 16:57 requirements.txt
+-rw-r--r--   1 admin  staff  8266 26 Mar 09:26 run_trainer.py
+
+total 72
+drwxr-xr-x   3 admin  staff    96 26 Mar 09:52 __pycache__
+-rw-r--r--   1 admin  staff  5630 26 Mar 09:52 dataset.py
+-rw-r--r--   1 admin  staff  1267 26 Mar 10:09 execute.py
+drwxr-xr-x@ 11 admin  staff   352 16 Fev 16:59 machado
+-rw-r--r--   1 admin  staff  2019 19 Mar 08:43 monitor.py
+-rw-r--r--   1 admin  staff  2196 26 Mar 10:09 monitor_2022_03_26.log
+-rw-r--r--   1 admin  staff    33  7 Mar 16:57 requirements.txt
+-rw-r--r--   1 admin  staff  8266 26 Mar 09:26 run_trainer.py
+
+total 72
+drwxr-xr-x   3 admin  staff    96 26 Mar 09:52 __pycache__
+-rw-r--r--   1 admin  staff  5630 26 Mar 09:52 dataset.py
+-rw-r--r--   1 admin  staff  1267 26 Mar 10:09 execute.py
+drwxr-xr-x@ 11 admin  staff   352 16 Fev 16:59 machado
+-rw-r--r--   1 admin  staff  2019 19 Mar 08:43 monitor.py
+-rw-r--r--   1 admin  staff  2690 26 Mar 10:09 monitor_2022_03_26.log
+-rw-r--r--   1 admin  staff    33  7 Mar 16:57 requirements.txt
+-rw-r--r--   1 admin  staff  8266 26 Mar 09:26 run_trainer.py
+
+total 72
+drwxr-xr-x   3 admin  staff    96 26 Mar 09:52 __pycache__
+-rw-r--r--   1 admin  staff  5630 26 Mar 09:52 dataset.py
+-rw-r--r--   1 admin  staff  1267 26 Mar 10:09 execute.py
+drwxr-xr-x@ 11 admin  staff   352 16 Fev 16:59 machado
+-rw-r--r--   1 admin  staff  2019 19 Mar 08:43 monitor.py
+-rw-r--r--   1 admin  staff  3184 26 Mar 10:09 monitor_2022_03_26.log
+-rw-r--r--   1 admin  staff    33  7 Mar 16:57 requirements.txt
+-rw-r--r--   1 admin  staff  8266 26 Mar 09:26 run_trainer.py
+
+Executando o treinamento
+ ********
+Tokens por sentença: 16.
+Sentenças por Bloco de treinamento: 4.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+

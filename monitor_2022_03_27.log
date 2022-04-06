@@ -1,0 +1,246 @@
+No GPU available, using the CPU instead.
+Executando o treinamento
+ ********
+Tokens por sentença: 16.
+Sentenças por Bloco de treinamento: 4.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 32.
+Sentenças por Bloco de treinamento: 4.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 64.
+Sentenças por Bloco de treinamento: 4.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 128.
+Sentenças por Bloco de treinamento: 4.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 256.
+Sentenças por Bloco de treinamento: 4.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 16.
+Sentenças por Bloco de treinamento: 8.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 32.
+Sentenças por Bloco de treinamento: 8.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 64.
+Sentenças por Bloco de treinamento: 8.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 128.
+Sentenças por Bloco de treinamento: 8.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 256.
+Sentenças por Bloco de treinamento: 8.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 16.
+Sentenças por Bloco de treinamento: 16.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 32.
+Sentenças por Bloco de treinamento: 16.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 64.
+Sentenças por Bloco de treinamento: 16.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 128.
+Sentenças por Bloco de treinamento: 16.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 256.
+Sentenças por Bloco de treinamento: 16.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 16.
+Sentenças por Bloco de treinamento: 32.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 32.
+Sentenças por Bloco de treinamento: 32.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 64.
+Sentenças por Bloco de treinamento: 32.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 128.
+Sentenças por Bloco de treinamento: 32.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 256.
+Sentenças por Bloco de treinamento: 32.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 16.
+Sentenças por Bloco de treinamento: 64.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 32.
+Sentenças por Bloco de treinamento: 64.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 64.
+Sentenças por Bloco de treinamento: 64.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 128.
+Sentenças por Bloco de treinamento: 64.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 256.
+Sentenças por Bloco de treinamento: 64.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 16.
+Sentenças por Bloco de treinamento: 128.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 32.
+Sentenças por Bloco de treinamento: 128.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 64.
+Sentenças por Bloco de treinamento: 128.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 128.
+Sentenças por Bloco de treinamento: 128.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 256.
+Sentenças por Bloco de treinamento: 128.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 16.
+Sentenças por Bloco de treinamento: 256.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 32.
+Sentenças por Bloco de treinamento: 256.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 64.
+Sentenças por Bloco de treinamento: 256.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 128.
+Sentenças por Bloco de treinamento: 256.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
+Executando o treinamento
+ ********
+Tokens por sentença: 256.
+Sentenças por Bloco de treinamento: 256.
+Modelo pré-treinado: neuralmind/bert-base-portuguese-cased.
+
+
