@@ -39,6 +39,9 @@ else:
 for batch in [256,128,64,32,16]:
     for block in [256,128,64,32,16]:
         
+        if batch * block > 4097:
+            continue
+        
         este_comando = commands + ["--max_seq_length={0}".format(block), "--batch_size={0}".format(batch)]
         
         print("Executando o treinamento\n ********")
@@ -46,12 +49,7 @@ for batch in [256,128,64,32,16]:
         print("Sentenças por Bloco de treinamento: {0}.".format(batch))
         print("Modelo pré-treinado: {0}.\n".format(modelo))
         
-        
-        monitor.info("Executando o treinamento\n ********")
-        monitor.info("Tokens por sentença: {0}.".format(block))
-        monitor.info("Sentenças por Bloco de treinamento: {0}.".format(batch))
-        monitor.info("Modelo pré-treinado: {0}.\n".format(modelo))
-        
+
         with subprocess.Popen(este_comando, stdout=subprocess.PIPE, stderr=None) as running:
             monitor.info(running.communicate()[0].decode('utf-8'))
         
