@@ -1,2 +1,5 @@
 transformers>= 2.0
 datasets>=1.18
+torch
+datasets
+nltk

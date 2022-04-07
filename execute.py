@@ -39,7 +39,7 @@ else:
 for batch in [256,128,64,32,16]:
     for block in [256,128,64,32,16]:
         
-        este_comando = commands + ["--block_size={0}".format(block), "--batch_size={0}".format(batch)]
+        este_comando = commands + ["--max_seq_length={0}".format(block), "--batch_size={0}".format(batch)]
         
         print("Executando o treinamento\n ********")
         print("Tokens por sentença: {0}.".format(block))

@@ -135,7 +135,9 @@ class AnBertDataset(object):
         
         for k in list(examples.keys()):
             for t in examples[k]:
-               resulta[k] += [t[i:i+self.block_size] for i in range(0,len(t), self.block_size)]
+                temp = [t[i:i+self.block_size] for i in range(0,len(t), self.block_size)]
+                temp = [j + [0]*(self.block_size - len(j)) for j in temp]
+                resulta[k] += temp
              
         # result = {
         #     k: [t[i : i + self.block_size] for i in range(0, len(t), self.block_size)]
