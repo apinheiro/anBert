@@ -121,6 +121,8 @@ class AnBertDataset(object):
         return True
     
     def __group_texts(self, examples):
+        
+        meus_exemplos = {k: examples[k] for k in examples.keys()}
         # Concatenate all texts
         concatenated_examples = {k: sum(examples[k], []) for k in examples.keys()}
         # Compute length of concatenated texts
@@ -128,13 +130,22 @@ class AnBertDataset(object):
         # We drop the last chunk if it's smaller than chunk_size
         total_length = (total_length // self.block_size) * self.block_size
         # Split by chunks of max_len
-        result = {
-            k: [t[i : i + self.block_size] for i in range(0, total_length, self.block_size)]
-            for k, t in concatenated_examples.items()
-        }
+        
+        resulta = {k : [] for k in meus_exemplos.keys()}
+        
+        for k in list(examples.keys()):
+            for t in examples[k]:
+               resulta[k] += [t[i:i+self.block_size] for i in range(0,len(t), self.block_size)]
+             
+        # result = {
+        #     k: [t[i : i + self.block_size] for i in range(0, len(t), self.block_size)]
+        #     for k, t in concatenated_examples.items()
+        # }
         # Create a new labels column
-        result["labels"] = result["input_ids"].copy()
-        return result
+        #result = {k: [numpy.ndarray(t).flatten()] for k, t in result.items()}
+        
+        resulta["labels"] = resulta["input_ids"].copy()
+        return resulta
     
     def __tokenize_function(self, examples):
         result = self.tokenizer(examples["text"])

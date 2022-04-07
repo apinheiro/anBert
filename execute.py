@@ -10,7 +10,8 @@ modelo = "neuralmind/bert-base-portuguese-cased"
 commands = ["python3", "run_trainer.py",
             "--bert_model={0}".format(modelo),
             "--train_dataset=./machado.ds",
-            "--do_train"]
+            "--do_train",
+            "--per_gpu_train_batch_size=1"]
 
 FORMAT = '%(message)s'
 file = datetime.now().strftime('monitor_%Y_%m_%d.log')

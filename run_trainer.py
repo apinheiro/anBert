@@ -39,8 +39,6 @@ def getParametros():
                         help="Número de camadas hidden")
     parser.add_argument("--batch_size", type=int,
                         help="Tamanho do batch de treinamento.")
-    parser.add_argument("--block_size", type=int,
-                        help="Tamanho do bloco de texto para tratamento.")
     # General
     parser.add_argument("--no_cuda",
                         action='store_true',
@@ -194,16 +192,20 @@ if __name__ == '__main__':
     
     if args.train_dataset is None: 
         log.info("Carregando o dataset a partir do diretório {0}.".format(args.train_path))
-        ads = AnBertDataset(tokenizer, path = args.train_path, block_size= args.block_size, file=args.train_file)
+        ads = AnBertDataset(tokenizer, path = args.train_path, block_size= args.max_seq_length, file=args.train_file)
         ads.load_dataset()
     else:
-        ads = AnBertDataset(tokenizer, block_size=args.block_size)
+        ads = AnBertDataset(tokenizer, block_size=args.max_seq_length)
         ads.load_file(args.train_dataset)
 
     log.info("Gerando o dataset para modelos do tipo Label Masked.")
     tokenized_samples = ads.getLabelMaskedDataset()
     
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm_probability=0.15)
+
+    # @TODO: Trocar este pedaço de código pela outra forma de treinamento.
+    # Conforme está no caderno do google colab
+    
 
     # Show the training loss with every epoch
     logging_steps = len(tokenized_samples["train"]) // args.batch_size
@@ -215,10 +217,10 @@ if __name__ == '__main__':
         evaluation_strategy="epoch",
         learning_rate=args.learning_rate,
         weight_decay=0.01,
-        per_device_train_batch_size=args.batch_size,
-        per_device_eval_batch_size=args.batch_size,
+        per_device_train_batch_size=args.per_gpu_train_batch_size,
+        per_device_eval_batch_size=args.per_gpu_train_batch_size,
         fp16=args.fp16,
-        logging_steps=logging_steps,
+        logging_steps=logging_steps
     )
     
     if args.do_train:
