@@ -217,10 +217,11 @@ if __name__ == '__main__':
         evaluation_strategy="epoch",
         learning_rate=args.learning_rate,
         weight_decay=0.01,
-        per_device_train_batch_size=args.per_gpu_train_batch_size,
+        per_device_train_batch_size=args.batch_size,
         per_device_eval_batch_size=args.per_gpu_train_batch_size,
         fp16=args.fp16,
-        logging_steps=logging_steps
+        logging_steps=logging_steps,
+        num_train_epochs=args.num_train_epochs
     )
     
     if args.do_train:
