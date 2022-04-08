@@ -10,22 +10,20 @@ modelo = "neuralmind/bert-base-portuguese-cased"
 commands = ["python3", "run_trainer.py",
             "--bert_model={0}".format(modelo),
             "--train_dataset=./machado.ds",
-            "--do_train",
+            "--do_train","--do_eval",
             "--per_gpu_train_batch_size=1"]
 
-FORMAT = '%(message)s'
-file = datetime.now().strftime('monitor_%Y_%m_%d.log')
-logging.basicConfig(filename=file,
-                        filemode='a',
-                        format=FORMAT,
-                        level=logging.INFO)
+FORMAT = ' %(asctime)s: %(message)s'
+logging.basicConfig(datefmt='%Y-%m-%d %H:%M:%S',
+                    level=logging.INFO,
+                    format=FORMAT)
 
 monitor = logging.getLogger('monitor')
 
 # Verificando o tipo de ambiente de treinamento.
 if torch.cuda.is_available():      
     device = torch.device("cuda")
-    monitor.info('There are %d GPU(s) available.' % torch.cuda.device_count())
+    print('There are %d GPU(s) available.' % torch.cuda.device_count())
     monitor.info('We will use the GPU:', torch.cuda.get_device_name(0))
     
     #gpu = subprocess.run(["nvidia-smi"], stdout=subprocess.PIPE)
