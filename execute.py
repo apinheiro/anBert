@@ -11,7 +11,8 @@ commands = ["python3", "run_trainer.py",
             "--bert_model={0}".format(modelo),
             "--train_dataset=./machado.ds",
             "--do_train","--do_eval",
-            "--per_gpu_train_batch_size=1"]
+            "--per_gpu_train_batch_size=1",
+            "--num_train_epochs=1"]
 
 FORMAT = ' %(asctime)s: %(message)s'
 logging.basicConfig(datefmt='%Y-%m-%d %H:%M:%S',
