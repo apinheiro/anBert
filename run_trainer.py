@@ -221,7 +221,8 @@ if __name__ == '__main__':
         per_device_eval_batch_size=args.per_gpu_train_batch_size,
         fp16=args.fp16,
         logging_steps=logging_steps,
-        num_train_epochs=args.num_train_epochs
+        num_train_epochs=args.num_train_epochs,
+        save_strategy='no'
     )
     
     if args.do_train:
