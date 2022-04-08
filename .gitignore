@@ -116,10 +116,6 @@ dmypy.json
 
 .vscode
 distilbert-base-uncased-finetuned-imdb/
-<<<<<<< HEAD
-bert-base-portuguese-cased-finetuned-an/
-*.zip
-machado.ds
-=======
 machado.ds/
->>>>>>> parent of 13a39a9 (Ajustando o treinamento do modelo)
+
+ssh
