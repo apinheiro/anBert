@@ -116,6 +116,7 @@ dmypy.json
 
 .vscode
 distilbert-base-uncased-finetuned-imdb/
-machado.ds/
+bert-base-portuguese-cased-finetuned-an/
+machado.ds*
 
 ssh

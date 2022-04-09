@@ -224,8 +224,7 @@ if __name__ == '__main__':
         save_strategy='no'
     )
     
-    if args.do_train:
-        log.info("Preparando o treinamento.")
+    if args.do_train or args.do_eval:
         trainer = Trainer(
             model=model,
             args=training_args,
@@ -233,18 +232,14 @@ if __name__ == '__main__':
             eval_dataset=tokenized_samples["test"],
             data_collator=data_collator,compute_metrics=compute_metrics
         )
-        log.info("Inicializando o treinamento.")
-        trainer.train()
-        log.info("Finalizando o treinamento.")
+        if args.do_train:
+            log.info("Preparando o treinamento.")
+            
+            log.info("Inicializando o treinamento.")
+            trainer.train()
+            log.info("Finalizando o treinamento.")
+            validate(trainer.evaluate())
     
-        validate(trainer.evaluate())
-    
-    if args.do_eval:
-        log.info("iniciando a validação.")
-        evaler = Trainer(
-            model=model,
-            args=training_args,
-            eval_dataset=tokenized_samples['validate'],
-            data_collator=data_collator,compute_metrics=compute_metrics
-        )
-        print_validate(validate(tokenized_samples['validate'],model,args.batch_size))
+        if args.do_eval:
+            log.info("iniciando a validação.")
+            print_validate(validate(tokenized_samples['validate'],model,args.batch_size))
