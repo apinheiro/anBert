@@ -118,5 +118,4 @@ dmypy.json
 distilbert-base-uncased-finetuned-imdb/
 bert-base-portuguese-cased-finetuned-an/
 machado.ds*
-
 ssh
