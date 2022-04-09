@@ -40,6 +40,7 @@ for batch in sizes:
     for block in sizes:
         
         if batch * block > 4097:
+            monitor.info("Batch {0} com Block {1} ignorado.\n".format(batch, block))
             continue
         
         este_comando = commands + ["--max_seq_length={0}".format(block), "--batch_size={0}".format(batch)]

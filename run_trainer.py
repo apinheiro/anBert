@@ -221,7 +221,8 @@ if __name__ == '__main__':
         per_device_eval_batch_size=args.per_gpu_train_batch_size,
         fp16=args.fp16,
         num_train_epochs=args.num_train_epochs,
-        save_strategy='no'
+        save_strategy='no',
+        logging_steps=logging_steps
     )
     
     if args.do_train or args.do_eval:
@@ -230,7 +231,8 @@ if __name__ == '__main__':
             args=training_args,
             train_dataset=tokenized_samples["train"],
             eval_dataset=tokenized_samples["test"],
-            data_collator=data_collator,compute_metrics=compute_metrics
+            data_collator=data_collator,
+            compute_metrics=compute_metrics
         )
         if args.do_train:
             log.info("Preparando o treinamento.")
