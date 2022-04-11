@@ -238,9 +238,13 @@ if __name__ == '__main__':
             log.info("Preparando o treinamento.")
             
             log.info("Inicializando o treinamento.")
-            trainer.train()
-            log.info("Finalizando o treinamento.")
-            validate(trainer.evaluate())
+            try:
+                trainer.train()
+            except:
+                print("")
+            
+            #log.info("Finalizando o treinamento.")
+            #validate(trainer.evaluate())
     
         if args.do_eval:
             log.info("iniciando a validação.")
