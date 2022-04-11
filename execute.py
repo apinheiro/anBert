@@ -43,7 +43,7 @@ for batch in sizes:
             monitor.info("Batch {0} com Block {1} ignorado.\n".format(batch, block))
             continue
         
-        subprocess.Popen("clear_cache.sh", stdout=subprocess.PIPE, stderr=None)
+        subprocess.Popen("clear_cache.sh", stdout=None, stderr=None)
         
         
         este_comando = commands + ["--max_seq_length={0}".format(block), "--batch_size={0}".format(batch)]
@@ -54,6 +54,7 @@ for batch in sizes:
         monitor.info("Modelo pré-treinado: {0}.\n".format(modelo))
         
 
-        subprocess.Popen(este_comando, stdout=subprocess.PIPE, stderr=None)
+        with subprocess.Popen(este_comando, stdout=subprocess.PIPE, stderr=None) as s:
+            print("ok.")
         
         monitor.info("Treinamento finalizado.\n*************")
