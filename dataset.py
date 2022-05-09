@@ -109,15 +109,21 @@ class AnBertDataset(object):
         return x_train, x_eval, x_validate
     
     def getLabelMaskedDataset(self, targets = []):
-        self._targets = targets
-        return self.dataset.map(self.__group_texts, batched=True)
+        ds = self.dataset.copy()
+        _ = [ds[t].map(self.__group_texts, batched=True) for t in targets]
+        #return self.dataset.map(self.__group_texts, batched=True)
+        return ds
     
     def getNextSentenceDataset(self, block_size = 32):
         return True
     
     def __group_texts(self, examples):
         
-        meus_exemplos = {k: examples[k] for k in examples.keys() if k in self._targets}
+        # Multiplicando o número de textos para aumentar o parâmetro de treinamento.
+        for k in examples.keys():
+            examples[k] += examples[k] * 4
+        
+        meus_exemplos = {k: examples[k] for k in examples.keys()}
         # Concatenate all texts
         concatenated_examples = {k: sum(examples[k], []) for k in examples.keys()}
         # Compute length of concatenated texts
@@ -128,7 +134,7 @@ class AnBertDataset(object):
         
         resulta = {k : [] for k in meus_exemplos.keys()}
         
-        for k in list(examples.keys()):
+        for k in list(meus_exemplos.keys()):
             for t in examples[k]:
                 temp = [t[i:i+self.block_size] for i in range(0,len(t), self.block_size)]
                 temp = [j + [0]*(self.block_size - len(j)) for j in temp]

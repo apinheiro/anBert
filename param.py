@@ -69,6 +69,8 @@ def _modelArguments(parser: ArgumentParser):
     
     parser.add_argument("--eval_batch_size", type=int, default=4,
                         help="Tamanho do batch de treinamento.")
+    parser.add_argument("--gradient_accumulation_steps", type=int, default=1,
+                        help="Total of acumulation before normalizing values.")
 
 def _baseArguments(parser: ArgumentParser):
     """ Base arguments
@@ -109,6 +111,8 @@ def _trainingArguments(parser: ArgumentParser):
                         help="Batch size per GPU/CPU for training.")
     parser.add_argument("--learning_rate", default=5e-5,
                         type=float, help="The initial learning rate for Adam.")
+    parser.add_argument("--weight_decay", default=0.01,
+                        type=float, help="The initial weight decay.")
     parser.add_argument('--classifier_lr',
                         type=float,
                         default=2e-5,
@@ -119,6 +123,8 @@ def _trainingArguments(parser: ArgumentParser):
                         help="Proportion of training to perform linear "
                             "learning rate warmup for. E.g., 0.1 = 10%% "
                             "of training.")
+    parser.add_argument("--mlm_probability", type=float, default=0.15,
+                        help="Portion of tokens with changed to MAKS token.")
     parser.add_argument('--seed',
                         type=int,
                         default=42,
