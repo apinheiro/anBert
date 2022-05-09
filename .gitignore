@@ -119,3 +119,6 @@ distilbert-base-uncased-finetuned-imdb/
 bert-base-portuguese-cased-finetuned-an/
 machado.ds*
 ssh
+
+.DS_Store
+*.csv

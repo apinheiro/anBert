@@ -3,88 +3,20 @@
 Este arquivo diz respeito ao processo de treinamento de um modelo BERT.
 """
 
-import re
+#import re
 from dataset import AnBertDataset
 from transformers import AutoModelForMaskedLM, Trainer, BertTokenizer, DataCollatorForLanguageModeling, TrainingArguments
-import tensorflow as tf
+#import tensorflow as tf
 import numpy as np
-from pathlib import Path
-from argparse import Namespace, ArgumentParser
+#from pathlib import Path
+
 
 from torch.utils.data import TensorDataset, DataLoader, SequentialSampler
 
-from sklearn.metrics import accuracy_score, f1_score, precision_recall_fscore_support
-import nltk, datasets, math, torch, logging, time
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+import nltk, torch, logging, time
 
-def getParametros():
-    
-    parser = ArgumentParser()
-    # Model and hyperparameters
-    parser.add_argument("--bert_model", default=None, type=str, required=True,
-                        help="Modelo do BERT para treinamento. Pode ser diretório ou um modelo")
-    parser.add_argument("--do_lower_case",
-                        action='store_true',
-                        help="Whether to lower case the input text. True for "
-                        "uncased models, False for cased models.")
-    parser.add_argument("--max_seq_length", default=512, type=int,
-                        help="The maximum total input sequence length after "
-                        "WordPiece tokenization. Sequences longer than this "
-                        "will be split into multiple spans, and sequences "
-                        "shorter than this will be padded.")
-    parser.add_argument("--max_position_embeddings", default=512, type=int,
-                    help="Max embeddings to training.")
-    parser.add_argument("-attentions_heads", default=12, type=int,
-                        help="Número de camadas de atenção.")
-    parser.add_argument("--hidden_layer", default=6,type=int,
-                        help="Número de camadas hidden")
-    parser.add_argument("--batch_size", type=int,
-                        help="Tamanho do batch de treinamento.")
-    # General
-    parser.add_argument("--no_cuda",
-                        action='store_true',
-                        help="Whether not to use CUDA when available")
-    parser.add_argument("--verbose_logging", action='store_true',
-                        help="If true, all of the warnings related to data "
-                        "processing will be printed.")
-    parser.add_argument('--override_cache',
-                        action='store_true',
-                        help='Override feature caches of input files.')
 
-    # Training related
-    parser.add_argument("--do_train", action='store_true',
-                        help="Whether to run training.")
-    parser.add_argument("--train_path", default=None,
-                        type=str, help="Path with train files.")
-    parser.add_argument("--train_dataset",type=str, help="Path with pre-trained dataset.")
-    parser.add_argument("--train_file", type=str, help="File to single training.")
-    parser.add_argument("--per_gpu_train_batch_size", default=8, type=int,
-                        help="Batch size per GPU/CPU for training.")
-    parser.add_argument("--learning_rate", default=5e-5,
-                        type=float, help="The initial learning rate for Adam.")
-    parser.add_argument('--classifier_lr',
-                        type=float,
-                        default=2e-5,
-                        help='Learning rate of the classifier and CRF layers.')
-    parser.add_argument("--num_train_epochs", default=3, type=int,
-                        help="Total number of training epochs to perform.")
-    parser.add_argument("--warmup_proportion", default=0.1, type=float,
-                        help="Proportion of training to perform linear "
-                            "learning rate warmup for. E.g., 0.1 = 10%% "
-                            "of training.")
-    parser.add_argument('--seed',
-                        type=int,
-                        default=42,
-                        help="random seed for initialization")
-    parser.add_argument('--fp16',
-                        action='store_true',
-                        help="Whether to use 16-bit float precision instead of"
-                        " 32-bit")
-
-    # Evaluation related
-    parser.add_argument("--do_eval", action='store_true',
-                        help="Whether to run eval on the test set.")
-
-    return parser.parse_args()
 
 def validate(ds, model, batch_size):
     accuracy = 0.0
@@ -141,13 +73,6 @@ def validate(ds, model, batch_size):
         'eval_runtime': (time.time()-t0)
     }
     
-        #label_ids = b_labels.to('cpu').numpy()
-    
-        #predictions = np.argmax(logits, axis=-1).flatten()
-        #accuracy += accuracy_score(label_ids.flatten(),predictions)
-        #f1score += f1_score(label_ids.flatten(), predictions, average='macro')
-    
-    
 def print_validate(eval):
     
     results = ["Tempo total de validação: {:.3f}s .",
@@ -178,6 +103,12 @@ if __name__ == '__main__':
     log = logging.getLogger('monitor')
 
     log.info("Baixando o Punkt para separar frases.")
+    
+    parser = ArgumentParser()
+    
+    modelArguments(parser)
+    
+    
     nltk.download('punkt')
     args = getParametros()
      
@@ -199,7 +130,7 @@ if __name__ == '__main__':
         ads.load_file(args.train_dataset)
 
     log.info("Gerando o dataset para modelos do tipo Label Masked.")
-    tokenized_samples = ads.getLabelMaskedDataset()
+    tokenized_samples = ads.getLabelMaskedDataset(target='train')
     
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm_probability=0.15)
 
@@ -248,4 +179,6 @@ if __name__ == '__main__':
     
         if args.do_eval:
             log.info("iniciando a validação.")
-            print_validate(validate(tokenized_samples['validate'],model,args.batch_size))
+            ads.block_size = args.eval_max_seq_length
+            tokenized_samples = ads.getLabelMaskedDataset(target='train')
+            print_validate(validate(tokenized_samples['validate'],model,args.eval_batch_size))

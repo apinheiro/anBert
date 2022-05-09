@@ -1,11 +1,6 @@
-import string
-import torch, os, re, numpy, datasets
+import os, re, datasets
 from pathlib import Path
 from nltk.tokenize import sent_tokenize
-import tensorflow as tf
-
-import collections
-import numpy as np
 
 from transformers.data import default_data_collator
 from transformers import DataCollatorForLanguageModeling
@@ -114,7 +109,8 @@ class AnBertDataset(object):
         
         return x_train, x_eval, x_validate
     
-    def getLabelMaskedDataset(self):
+    def getLabelMaskedDataset(self, targets = []):
+        self._targets = targets
         return self.dataset.map(self.__group_texts, batched=True)
     
     def getNextSentenceDataset(self, block_size = 32):
@@ -122,7 +118,7 @@ class AnBertDataset(object):
     
     def __group_texts(self, examples):
         
-        meus_exemplos = {k: examples[k] for k in examples.keys()}
+        meus_exemplos = {k: examples[k] for k in examples.keys() if k in self._targets}
         # Concatenate all texts
         concatenated_examples = {k: sum(examples[k], []) for k in examples.keys()}
         # Compute length of concatenated texts
@@ -138,13 +134,6 @@ class AnBertDataset(object):
                 temp = [t[i:i+self.block_size] for i in range(0,len(t), self.block_size)]
                 temp = [j + [0]*(self.block_size - len(j)) for j in temp]
                 resulta[k] += temp
-             
-        # result = {
-        #     k: [t[i : i + self.block_size] for i in range(0, len(t), self.block_size)]
-        #     for k, t in concatenated_examples.items()
-        # }
-        # Create a new labels column
-        #result = {k: [numpy.ndarray(t).flatten()] for k, t in result.items()}
         
         resulta["labels"] = resulta["input_ids"].copy()
         return resulta
