@@ -57,8 +57,7 @@ class AnBertDataset(object):
         for t in textos:
             sentences += sent_tokenize(t)
         
-        train, evaluate, validate = AnBertDataset.__split_dataset(sentences * 10, train_size, test_size, validate_size)
-        
+        train, evaluate, validate = AnBertDataset.__split_dataset(sentences, train_size, test_size, validate_size)   
         self.__populate_dataset(train, evaluate, validate)
     
     def __load_path(self):

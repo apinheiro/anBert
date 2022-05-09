@@ -1,5 +1,31 @@
 from argparse import  ArgumentParser
 
+# #########################
+# Public methods
+# #########################
+
+def parseArguments():
+    """ Arguments
+    
+    To configure a Bert Training and Evaluation process, this function returns the 
+    argument parser to use in the parser.
+
+    Returns:
+        ArgumentParser: instance of ArgumentParser class.
+    """
+    parser = ArgumentParser()
+    _modelArguments(parser)
+    _trainingArguments(parser)
+    _evalArguments(parser)
+    _infraArguments(parser)
+    _baseArguments(parser)
+
+    return parser.parse_args()
+
+# ###############################
+# Private methods
+# ###############################
+
 def _modelArguments(parser: ArgumentParser):
     """ Modelo Arguments
     
@@ -120,20 +146,3 @@ def _evalArguments(parser: ArgumentParser):
     parser.add_argument("--do_eval", action='store_true',
                         help="Whether to run eval on the test set.")
         
-def parseArguments():
-    """ Arguments
-    
-    To configure a Bert Training and Evaluation process, this function returns the 
-    argument parser to use in the parser.
-
-    Returns:
-        ArgumentParser: instance of ArgumentParser class.
-    """
-    parser = ArgumentParser()
-    _modelArguments(parser)
-    _trainingArguments(parser)
-    _evalArguments(parser)
-    _infraArguments(parser)
-    _baseArguments(parser)
-
-    return parser.parse_args()

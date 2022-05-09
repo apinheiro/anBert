@@ -1,23 +1,16 @@
 from dataset import AnBertDataset
 from transformers import  BertTokenizer
+from param import parseArguments
+
 import nltk 
 
 if __name__ == "__main__":
 
+    args = parseArguments()
     nltk.download('punkt')
-    t = BertTokenizer.from_pretrained("neuralmind/bert-base-portuguese-cased")
-    data = AnBertDataset(tokenizer=t,path="./machado/romance")
-    data.load_dataset()
-    
-    s = [len(h) for h in data.dataset["train"]["input_ids"]]
-    
-    print("número de tokens:")
-    
+    t = BertTokenizer.from_pretrained(args.bert_model)
+    data = AnBertDataset(tokenizer=t, path=args.train_path)
+    data.load_dataset(test_size=0.7, train_size=0.15, validate_size=0.15)
     
     data.save_file()
-    
-    data = None
-    data = AnBertDataset(tokenizer=t)
-    data.load_file()
-    
     print(data.dataset)
