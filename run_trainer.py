@@ -16,8 +16,6 @@ from torch.utils.data import TensorDataset, DataLoader, SequentialSampler
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import nltk, torch, logging, time
 
-
-
 def validate(ds, model, batch_size):
     accuracy = 0.0
     f1score = 0.0

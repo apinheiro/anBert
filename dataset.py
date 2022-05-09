@@ -28,10 +28,10 @@ class AnBertDataset(object):
         self.block_size = block_size
         self.dataset = None
     
-    def save_file(self, datasetName = "machado.ds"):
+    def save_dataset_file(self, datasetName = "machado.ds"):
         self.dataset.save_to_disk(datasetName)
         
-    def load_file(self, datasetName = "machado.ds"):
+    def load_dataset_file(self, datasetName = "machado.ds"):
         self.dataset = datasets.DatasetDict.load_from_disk(datasetName)
 
     def load_dataset(self, train_size = 0.8 , test_size = 0.1, validate_size = 0.1):    
