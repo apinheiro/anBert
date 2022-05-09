@@ -122,3 +122,4 @@ ssh
 
 .DS_Store
 *.csv
+nohup.out
