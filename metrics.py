@@ -1,3 +1,4 @@
+import numpy as np
 from torch.utils.data import TensorDataset, DataLoader, SequentialSampler
 
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
@@ -22,7 +23,6 @@ def print_validate(eval, logging):
     
     logging.info("\n".join(results).format(eval["eval_runtime"],eval["eval_accuracy"],eval["eval_f1"],
                                        eval["eval_recall"],eval["eval_precision"]))
-
 
 def calcule_validate(ds, model, batch_size, device='cpu'):
     accuracy = 0.0

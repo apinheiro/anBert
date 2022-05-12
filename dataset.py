@@ -108,16 +108,22 @@ class AnBertDataset(object):
         
         return x_train, x_eval, x_validate
     
-    def getLabelMaskedDataset(self, targets = []):
+    def getLabelMaskedDataset(self, test_seq_length : int = None, valid_seq_length : int = None):
+        self.valid_seq_length = valid_seq_length if valid_seq_length is not None else self.block_size
+        self.test_seq_length = test_seq_length if test_seq_length is not None else self.block_size
+        
         ds = self.dataset.copy()
-        _ = [ds[t].map(self.__group_texts, batched=True) for t in targets]
+        ds['train'].map(self.__group_texts, batched=True, fn_kwargs={"block_size": self.block_size})
+        
         #return self.dataset.map(self.__group_texts, batched=True)
         return ds
     
     def getNextSentenceDataset(self, block_size = 32):
         return True
     
-    def __group_texts(self, examples):
+    def __group_texts(self, examples, block_size: int = None):
+        
+        block_size = self.block_size if block_size is None else block_size
         
         # Multiplicando o número de textos para aumentar o parâmetro de treinamento.
         for k in examples.keys():
@@ -129,15 +135,15 @@ class AnBertDataset(object):
         # Compute length of concatenated texts
         total_length = len(concatenated_examples[list(examples.keys())[0]])
         # We drop the last chunk if it's smaller than chunk_size
-        total_length = (total_length // self.block_size) * self.block_size
+        total_length = (total_length // block_size) * block_size
         # Split by chunks of max_len
         
         resulta = {k : [] for k in meus_exemplos.keys()}
         
         for k in list(meus_exemplos.keys()):
             for t in examples[k]:
-                temp = [t[i:i+self.block_size] for i in range(0,len(t), self.block_size)]
-                temp = [j + [0]*(self.block_size - len(j)) for j in temp]
+                temp = [t[i: i + block_size] for i in range(0,len(t), block_size)]
+                temp = [j + [0]*(block_size - len(j)) for j in temp]
                 resulta[k] += temp
         
         resulta["labels"] = resulta["input_ids"].copy()

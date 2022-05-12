@@ -26,8 +26,6 @@ def getLogger(args: ArgumentParser):
 def getModel(args: ArgumentParser):
     log.info("Carregando modelo do Bert {0}.".format(args.bert_model))
     model = AutoModelForMaskedLM.from_pretrained(args.bert_model)
-    
-    
     model  = model.to(getDevice(args))
     
     log.info("Baixnado tokenizer.")
@@ -79,7 +77,7 @@ if __name__ == "__main__":
     
     
     log.info("Gerando o dataset para modelos do tipo Label Masked.")
-    tokenized_samples = ads.getLabelMaskedDataset(targets=['train','test'])
+    tokenized_samples = ads.getLabelMaskedDataset(test_seq_length = 128, valid_seq_lengh = 128)
     
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm_probability=args.mlm_probability)
     
@@ -100,12 +98,7 @@ if __name__ == "__main__":
             trainer.train()
             
             log.info("Finalizando o treinamento.")
-            #validate(trainer.evaluate())
-    
         if args.do_eval:
-            log.info("iniciando a validação.")
-            ads.block_size = args.eval_max_seq_length
-            tokenized_samples = ads.getLabelMaskedDataset(targets=['validate'])
-            print_validate(calcule_validate(tokenized_samples['validate'],model,args.eval_batch_size, getDevice(args)), logging)
+            print_validate(trainer.evaluate())
 
     
