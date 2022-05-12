@@ -109,11 +109,13 @@ class AnBertDataset(object):
         return x_train, x_eval, x_validate
     
     def getLabelMaskedDataset(self, test_seq_length : int = None, valid_seq_length : int = None):
-        self.valid_seq_length = valid_seq_length if valid_seq_length is not None else self.block_size
-        self.test_seq_length = test_seq_length if test_seq_length is not None else self.block_size
+        valid_seq_length = valid_seq_length if valid_seq_length is not None else self.block_size
+        test_seq_length = test_seq_length if test_seq_length is not None else self.block_size
         
         ds = self.dataset.copy()
         ds['train'].map(self.__group_texts, batched=True, fn_kwargs={"block_size": self.block_size})
+        ds['test'].map(self.__group_texts, batched=True, fn_kwargs={"block_size": test_seq_length})
+        ds['validate'].map(self.__group_texts, batched=True, fn_kwargs={"block_size": valid_seq_length})
         
         #return self.dataset.map(self.__group_texts, batched=True)
         return ds

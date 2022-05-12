@@ -77,7 +77,7 @@ if __name__ == "__main__":
     
     
     log.info("Gerando o dataset para modelos do tipo Label Masked.")
-    tokenized_samples = ads.getLabelMaskedDataset(test_seq_length = 128, valid_seq_lengh = 128)
+    tokenized_samples = ads.getLabelMaskedDataset(test_seq_length = 128, valid_seq_length = 128)
     
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm_probability=args.mlm_probability)
     
