@@ -2,7 +2,21 @@ import numpy as np
 from torch.utils.data import TensorDataset, DataLoader, SequentialSampler
 
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
-import nltk, torch, logging, time
+import torch, time
+
+import time
+import datetime
+
+def format_time(elapsed):
+    '''
+    Takes a time in seconds and returns a string hh:mm:ss
+    '''
+    # Round to the nearest second.
+    elapsed_rounded = int(round((elapsed)))
+    
+    # Format as hh:mm:ss
+    return str(datetime.timedelta(seconds=elapsed_rounded))
+
 
 def compute_metrics(pred):
     labels = pred.label_ids.flatten()
@@ -43,7 +57,15 @@ def calcule_validate(ds, model, batch_size, device='cpu'):
             batch_size = batch_size # Evaluate with this batch size.
         )
     
-    for batch in validation_dl:
+    for step, batch in enumerate(validation_dl):
+    
+        # Progress update every 40 batches.
+        if step % 100 == 0 and not step == 0:
+            # Calculate elapsed time in minutes.
+            elapsed = format_time(time.time() - t0)
+            
+            # Report progress.
+            print('  Batch {:>5,}  of  {:>5,}.    Elapsed: {:}.'.format(step, len(validation_dl), elapsed))
         
         b_labels = batch[2].to(device)
         b_input_ids = batch[0].to(device)

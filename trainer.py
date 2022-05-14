@@ -23,7 +23,7 @@ def getLogger(args: ArgumentParser):
                             format='########\n %(asctime)s: %(message)s')
     return logging.getLogger('monitor')
 
-def getModel(args: ArgumentParser):
+def getModel(args: ArgumentParser, log):
     log.info("Carregando modelo do Bert {0}.".format(args.bert_model))
     model = AutoModelForMaskedLM.from_pretrained(args.bert_model)
     model  = model.to(getDevice(args))
@@ -35,7 +35,7 @@ def getModel(args: ArgumentParser):
     
 def getTrainParameters(args, model_name):
     return TrainingArguments(
-        output_dir=f"{model_name}-an-bs{args.batch_size}-sl{args.max_seq_length}",
+        output_dir="tmp/output",
         overwrite_output_dir=True,
         evaluation_strategy="epoch",
         learning_rate=args.learning_rate,
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     args = parseArguments()
     log = getLogger(args)
 
-    model, tokenizer = getModel(args)
+    model, tokenizer = getModel(args, log)
     
     # Verificando se é um dataset a ser informado ou se é um diretório com arquivos.
     if args.train_dataset is None: 
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     
     
     log.info("Gerando o dataset para modelos do tipo Label Masked.")
-    tokenized_samples = ads.getLabelMaskedDataset(test_seq_length = 128, valid_seq_length = 128)
+    tokenized_samples = ads.getLabelMaskedDataset(targets=['train','test'], test_seq_length = args.eval_max_seq_length, valid_seq_length = args.eval_max_seq_length)
     
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm_probability=args.mlm_probability)
     
@@ -89,7 +89,6 @@ if __name__ == "__main__":
             model=model,
             args=getTrainParameters(args,model_name),
             train_dataset=tokenized_samples["train"],
-            eval_dataset=tokenized_samples["test"],
             data_collator=data_collator,
             compute_metrics=compute_metrics
         )
@@ -99,6 +98,12 @@ if __name__ == "__main__":
             
             log.info("Finalizando o treinamento.")
         if args.do_eval:
-            print_validate(trainer.evaluate())
+            print_validate(
+                calcule_validate(tokenized_samples['test'],
+                                 model,
+                                 args.eval_batch_size, 
+                                 getDevice(args)),
+                log)
+        trainer.save_model(output_dir=f"{model_name}-an-bs{args.batch_size}-sl{args.max_seq_length}")
 
     

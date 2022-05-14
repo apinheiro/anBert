@@ -10,7 +10,7 @@ if __name__ == "__main__":
     args = parseArguments()
     log = getLogger(args)
 
-    model, tokenizer = getModel(args)
+    model, tokenizer = getModel(args, log)
     
     # Verificando se é um dataset a ser informado ou se é um diretório com arquivos.
     if args.train_dataset is None: 
@@ -24,8 +24,8 @@ if __name__ == "__main__":
         log.info("Carregando dataset previamente cadastrado.")
         ads = AnBertDataset(tokenizer, block_size=args.max_seq_length)
         ads.load_dataset_file(args.train_dataset)
-        if args.do_eval:
-            log.info("iniciando a validação.")
-            ads.block_size = args.eval_max_seq_length
-            tokenized_samples = ads.getLabelMaskedDataset(targets=['validate'])
-            print_validate(calcule_validate(tokenized_samples['validate'],model,args.eval_batch_size, getDevice(args)), log)
+        
+    log.info("iniciando a validação.")
+    ads.block_size = args.eval_max_seq_length
+    tokenized_samples = ads.getLabelMaskedDataset(targets=['validate'], valid_seq_length = args.eval_max_seq_length)
+    print_validate(calcule_validate(tokenized_samples['validate'],model,args.eval_batch_size, getDevice(args)), log)

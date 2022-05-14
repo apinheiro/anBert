@@ -108,16 +108,15 @@ class AnBertDataset(object):
         
         return x_train, x_eval, x_validate
     
-    def getLabelMaskedDataset(self, test_seq_length : int = None, valid_seq_length : int = None):
-        valid_seq_length = valid_seq_length if valid_seq_length is not None else self.block_size
-        test_seq_length = test_seq_length if test_seq_length is not None else self.block_size
-        
+    def getLabelMaskedDataset(self, targets = ['train','test','validate'], test_seq_length : int = None, valid_seq_length : int = None):
+        targs = {
+            'train' : self.block_size,
+            'test' : test_seq_length if test_seq_length is not None else self.block_size,
+            'validate': valid_seq_length if valid_seq_length is not None else self.block_size
+        }
         ds = self.dataset.copy()
-        ds['train'].map(self.__group_texts, batched=True, fn_kwargs={"block_size": self.block_size})
-        ds['test'].map(self.__group_texts, batched=True, fn_kwargs={"block_size": test_seq_length})
-        ds['validate'].map(self.__group_texts, batched=True, fn_kwargs={"block_size": valid_seq_length})
-        
-        #return self.dataset.map(self.__group_texts, batched=True)
+        for t in targets:
+            ds[t].map(self.__group_texts, batched=True, fn_kwargs={"block_size": targs[t]})
         return ds
     
     def getNextSentenceDataset(self, block_size = 32):
